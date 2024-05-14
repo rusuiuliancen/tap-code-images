@@ -8,7 +8,7 @@ namespace DataLayer
     public class MyDbContext : DbContext
     {
 
-        private readonly string _windowsConnectionString = @"Data Source=NBKR004513;Initial Catalog=Lab5DatabaseImg9;Integrated Security=True;TrustServerCertificate=True";
+        private readonly string _windowsConnectionString = @"Data Source=NBKR004513;Initial Catalog=Lab5DatabaseImg8;Integrated Security=True;TrustServerCertificate=True";
 
         public DbSet<User> Users { get; set; }
         public DbSet<UserType> UserTypes { get; set; }
@@ -26,6 +26,8 @@ namespace DataLayer
                 .HasOne(f => f.Type)
                 .WithMany(c => c.Users)
                 .HasForeignKey(f => f.TypeId);
+
+            builder.Entity<UserType>().HasData(new UserType { Id = Guid.Parse("B5443DFF-4AE6-4C8B-54D1-08DC74373A42"), Name = "Admin" });
         }
     }
 }

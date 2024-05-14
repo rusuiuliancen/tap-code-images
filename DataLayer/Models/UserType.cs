@@ -2,6 +2,10 @@
 {
     public class UserType
     {
+        public UserType()
+        {
+        }
+
         public UserType(string name)
         {
             Name = name;
