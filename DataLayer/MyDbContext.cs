@@ -7,8 +7,8 @@ namespace DataLayer
     // dotnet ef database update
     public class MyDbContext : DbContext
     {
-
-        private readonly string _windowsConnectionString = @"Data Source=NBKR004513;Initial Catalog=Lab5DatabaseImg8;Integrated Security=True;TrustServerCertificate=True";
+        private readonly string _windowsConnectionString = @"Server=.\SQLExpress;Database=Lab5Database1;Trusted_Connection=True;TrustServerCertificate=true";
+        //private readonly string _windowsConnectionString = @"Server=localhost\SQLEXPRESS;Database=Lab5Database1;Trusted_Connection=True;TrustServerCertificate=True;";
 
         public DbSet<User> Users { get; set; }
         public DbSet<UserType> UserTypes { get; set; }
