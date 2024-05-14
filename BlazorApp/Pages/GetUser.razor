@@ -1,0 +1,63 @@
+﻿@page "/get-user"
+@inject HttpClient Http
+
+<PageTitle>Users</PageTitle>
+
+<h1>Users list</h1>
+
+@if (users == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>TypeId</th>
+                <th>ProfilePicture</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in users)
+            {
+                <tr>
+                    <td>@user.Name</td>
+                    <td>@user.Email</td>
+                    <td>@user.TypeId</td>
+                    <td>
+                        @if (user.ProfilePicture != null && user.ProfilePicture.Length > 0)
+                        {
+                            <img style="width: 50px; height: 50px;" src="data:image/jpeg;base64,@user.ProfilePicture" alt="Profile images">
+                        }
+                        else
+                        {
+                            <img style="width: 50px; height: 50px;" src="https://via.placeholder.com/50" alt="Profile images">
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<UserDto> users;
+
+    protected override async Task OnInitializedAsync()
+    {
+        users = await Http.GetFromJsonAsync<List<UserDto>>("user/get");
+    }
+
+    public class UserDto
+    {
+
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public Guid TypeId { get; set; }
+        public string ProfilePicture { get; set; }
+        public string Password { get; set; }
+    }
+}

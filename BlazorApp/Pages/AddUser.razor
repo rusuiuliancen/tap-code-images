@@ -1,0 +1,59 @@
+﻿@page "/add-user"
+@inject HttpClient Http
+
+<PageTitle>Add user</PageTitle>
+<h1>Add dummy user</h1>
+
+<div class="input-group">
+    <div class="custom-file">
+        <InputFile class="custom-file-input" OnChange="OnChange" accept="image/png, image/jpeg, image/gif" id="inputFile" />
+        <label class="custom-file-label" for="inputFile">Choose profile pic</label>
+    </div>
+    <div class="input-group-append">
+        <button class="btn btn-success" @onclick="Upload">Add user</button>
+    </div>
+</div>
+
+<img src="data:@fileBase64.ContentType;base64,@fileBase64.Base64data" />
+
+@code {
+    ImageFile fileBase64 = new ImageFile();
+
+    async Task OnChange(InputFileChangeEventArgs e)
+    {
+        var files = e.GetMultipleFiles();
+        foreach(var file in files)
+        {
+            var resizedFile = await file.RequestImageFileAsync(file.ContentType, 640, 480);
+            var buf = new byte[resizedFile.Size]; 
+            using (var stream = resizedFile.OpenReadStream())
+            {
+                await stream.ReadAsync(buf);
+            }
+            fileBase64 = new ImageFile { Base64data = Convert.ToBase64String(buf), ContentType = file.ContentType, FileName = file.Name };
+        }
+    }
+
+    async Task Upload()
+    {
+        var userDto = new GetUser.UserDto()
+        {
+            Email = "test@em.com",
+            Name = "Test",
+            TypeId = Guid.Parse("B5443DFF-4AE6-4C8B-54D1-08DC74373A42"),
+            Password = "123456",
+            ProfilePicture = fileBase64.Base64data
+        };
+
+        using (await Http.PostAsJsonAsync("/user/add", userDto))
+        {
+        }
+    }
+
+    public class ImageFile
+    {
+        public string Base64data { get; set; }
+        public string ContentType { get; set; }
+        public string FileName { get; set; }
+    }
+}
